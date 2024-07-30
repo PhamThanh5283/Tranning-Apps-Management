@@ -1,0 +1,77 @@
+﻿@model Tranning_Apps_Management.Areas.Administrator.Models.UserManage
+
+<div class="card-body">
+    <div class="card">
+        <table id="Mtbl" class="table table-bodered table-striped">
+            <thead class="bg-light">
+                <tr>
+                    <th style="text-align:center" scope="col">Employee ID</th>
+                    <th style="text-align:center" scope="col">Employee Name</th>
+                    <th style="text-align:center" scope="col">Email</th>
+                    <th style="text-align:center" scope="col">Phone Number</th>
+                    <th style="text-align:center" scope="col">DepartmentID</th>
+                    <th style="text-align:center" scope="col">Department Name</th>
+                    <th style="text-align:center" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Usermanage.Count() != 0)
+                {
+                    foreach (var items in Model.Usermanage)
+                    {
+                        <tr>
+                            <th scope="row" style="text-align:center">@items.EmployeeID</th>
+                            <td style="text-align:center">@items.EmployeeName</td>
+                            <td style="text-align:center">@items.Email</td>
+                            <td style="text-align:center">@items.PhoneNumber</td>
+                            <td style="text-align:center">@items.DeptID</td>
+                            <td style="text-align:center">@items.DeptName</td>
+                            <td style="text-align:center">
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 hide-arrow" data-bs-toggle="dropdown">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="cardOpt4">
+                                        <a class="dropdown-item" href=""><b>Edit</b></a>
+                                        <a class="dropdown-item" id="btn_del" href="javascript:void(0);"><b>Delete</b></a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">No Record Found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#Mtbl").on("click", "#btn_del", function () {
+        if (confirm("Do you want to delete this row?")) {
+            var row = $(this).closest("tr");
+            $.ajax({
+                url: "/UsersAdmin/Delete_Row",
+                type: "POST",
+                data: { id: row.find("th").html() },
+                success: function (response) {
+                    if ($("#Mtbl tr").length > 2) {
+                        row.remove();
+                        toastr["success"]("successfully deleted data")
+                    } else {
+                        row.find(".Delete").hide();
+                        row.find("span").html('&nbsp;');
+                    }                  
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    });
+</script>

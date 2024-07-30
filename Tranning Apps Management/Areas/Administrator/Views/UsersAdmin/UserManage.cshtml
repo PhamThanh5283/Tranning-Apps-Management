@@ -1,0 +1,145 @@
+﻿@model Tranning_Apps_Management.Areas.Administrator.Models.UserManage
+
+@{
+    ViewData["Title"] = "UserManage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="bg-light py-3 py-md-5">
+    <div class="row" style="text-align:center">
+        <h2><b>USER MANAGEMENT</b></h2>
+    </div>
+    <div class="card" style="box-shadow:0 10px 6px -6px #999">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-secondary" id="addemployees" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="box-shadow:0 10px 6px -6px #999" data-mdb-ripple-init>Add Employee</button>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+@*                                <span class="input-group-text border-0" style="background-color:white">
+                                    <b>Upload excel file:</b>
+                                </span>*@
+                                <input type="file" class="form-control" id="customFile" />
+                                <button type="button" class="btn btn-success" data-mdb-ripple-init>Import List</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="container">
+                        <div class="input-group rounded">
+                            <input type="search" id="txtSearch" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                            <span class="input-group-text border-0" id="search-addon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tblUsManage"></div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/UsersAdmin/UsersManage" method="post" class="was-validated">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 w-100 text-center" id="staticBackdropLabel" style="color:brown"><img src="~/imgs/art-logo-rgb-bl.jpg" width="150px"></h1>
+                    <button type="button" class="btn-close" onclick="Closebtn()" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 mt-3">
+                        <label for="uname" class="form-label"><b>User Name:</b></label>
+                        <input type="text" class="form-control" id="uname" placeholder="Enter username" name="uname" required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="uname" class="form-label"><b>Your Department:</b></label>
+                        <select class="form-select" name="DepID" aria-label="Default select example" required>
+                            <option selected></option>
+                            @if (Model.departments.Count() > 0)
+                            {
+                                var DistinctItems = Model.departments.GroupBy(x => x.DeptId).Select(y => y.First());
+                                foreach (var item in DistinctItems)
+                                {
+                                    <option value="@item.DeptId">@item.Deptname</option>
+                                }
+                            }
+                        </select>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="email" class="form-label"><b>Your email:</b></label>
+                        <input type="text" class="form-control" id="email" placeholder="Enter email" name="email" required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="ID" class="form-label"><b>Your ID:</b></label>
+                        <input type="text" class="form-control" id="ID" placeholder="Enter your ID" name="id" required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Close" onclick="Closebtn()" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="btnlogin" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script>
+    $(() => {
+        getUsers();
+        $('#txtSearch').on('keyup', () => {
+            getUsers();
+        });
+    });
+
+    function getUsers() {
+        $.ajax({
+            url: '@Url.Action("SearchUsers","UsersAdmin")',
+            datatype: 'html',
+            method: 'GET',
+            data: { SearchText: $('#txtSearch').val() },
+            success: function (res) {
+                $('#tblUsManage').html('').html(res);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+    </script>
+
+
+    <script type="text/javascript">
+        $("#addemployees").click(() => {
+            var 
+        })
+
+    </script>
+
+    <script type="text/javascript">
+        var mysignup = '@TempData["AdminSignup"]';
+        $(document).ready(function () {
+            if (mysignup == "AdminSignup") {
+                toastr["success"]("Add Employees successful !")
+            }
+        });
+    </script>
+}
+
